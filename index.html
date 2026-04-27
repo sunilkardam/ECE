@@ -100,9 +100,69 @@ body{background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* ── Login overlay ── */
+#login-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+#login-overlay.hidden{display:none}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px 44px;width:100%;max-width:400px;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.login-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--a3);font-weight:600;margin-bottom:8px;text-align:center}
+.login-title{font-size:22px;font-weight:800;text-align:center;background:linear-gradient(90deg,#e8eaf0,#4f8ef7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.login-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:28px}
+.login-field{margin-bottom:18px}
+.login-field label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.login-field input{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--a1)}
+.login-btn{width:100%;padding:12px;background:linear-gradient(90deg,var(--a1),#3a6fd8);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+.login-btn:hover{opacity:.88}
+.login-err{display:none;color:var(--a2);font-size:12px;text-align:center;margin-top:12px;font-weight:600}
+.login-err.show{display:block}
+.hdr-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.logout-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid rgba(136,146,164,.2);color:rgba(136,146,164,.7);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;letter-spacing:.3px;transition:color .2s,border-color .2s,background .2s;white-space:nowrap;align-self:flex-end}
+.logout-btn:hover{color:var(--a2);border-color:rgba(247,105,79,.4);background:rgba(247,105,79,.07)}
 </style>
 </head>
 <body>
+
+<!-- ── Login Overlay ── -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-eyebrow">Strategic Intelligence Report</div>
+    <div class="login-title">Child Care as Workforce Infrastructure</div>
+    <div class="login-sub">Sign in to access the dashboard</div>
+    <div class="login-field">
+      <label for="login-user">Username</label>
+      <input type="text" id="login-user" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label for="login-pass">Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="login-err">Invalid username or password.</div>
+  </div>
+</div>
+<script>
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(u==='admin'&&p==='admin'){
+    document.getElementById('login-overlay').classList.add('hidden');
+  } else {
+    const err=document.getElementById('login-err');
+    err.classList.add('show');
+    document.getElementById('login-pass').value='';
+    setTimeout(()=>err.classList.remove('show'),3000);
+  }
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!document.getElementById('login-overlay').classList.contains('hidden')) doLogin();
+});
+function doLogout(){
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-err').classList.remove('show');
+  document.getElementById('login-overlay').classList.remove('hidden');
+}
+</script>
 
 <div class="hdr">
   <div class="hdr-l">
@@ -110,11 +170,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-
     <div class="title">Child Care as Workforce Infrastructure</div>
     <div class="subtitle">A system-wide analysis of cost burdens, infrastructure gaps &amp; economic consequences across all 53 states &amp; territories</div>
   </div>
-  <div class="hdr-kpis">
-    <div class="kpi-h"><div class="v">$15.5K</div><div class="l">Avg Infant Care/yr</div></div>
-    <div class="kpi-h r2"><div class="v">39%</div><div class="l">Income Burden</div></div>
-    <div class="kpi-h r3"><div class="v">$329B</div><div class="l">10-yr Econ Loss</div></div>
-    <div class="kpi-h r4"><div class="v">30%</div><div class="l">Avg Care Gap</div></div>
+  <div class="hdr-r">
+    <button class="logout-btn" onclick="doLogout()">&#x2192; Sign Out</button>
+    <div class="hdr-kpis">
+      <div class="kpi-h"><div class="v">$15.5K</div><div class="l">Avg Infant Care/yr</div></div>
+      <div class="kpi-h r2"><div class="v">39%</div><div class="l">Income Burden</div></div>
+      <div class="kpi-h r3"><div class="v">$329B</div><div class="l">10-yr Econ Loss</div></div>
+      <div class="kpi-h r4"><div class="v">30%</div><div class="l">Avg Care Gap</div></div>
+    </div>
   </div>
 </div>
 
